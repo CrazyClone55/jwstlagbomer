@@ -3,1077 +3,407 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lag BaOmer — Interactive Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Lag BaOmer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --fire:    #E8561A;
-  --fire2:   #FF7A3D;
-  --ember:   #B03A0A;
-  --gold:    #F5A623;
-  --gold2:   #FFD080;
-  --dark:    #120800;
-  --dark2:   #1E0D00;
-  --dark3:   #2A1200;
-  --cream:   #FAF3E0;
-  --smoke:   #C0A080;
-  --ash:     #8A6A50;
-  --panel:   #1A0C00;
-  --border:  rgba(232,86,26,0.25);
-}
-
-html { scroll-behavior: smooth; }
-
 body {
-  background: var(--dark);
-  color: var(--cream);
-  font-family: 'Source Sans 3', sans-serif;
+  background: #111008;
+  color: #e8dcc8;
+  font-family: 'Inter', sans-serif;
   font-weight: 300;
   line-height: 1.7;
-  min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* ── PARTICLES ──────────────────────────────── */
-#particles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-.spark {
-  position: absolute;
-  bottom: -10px;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--gold);
-  opacity: 0;
-  animation: rise var(--dur, 4s) ease-in var(--delay, 0s) infinite;
-}
-@keyframes rise {
-  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-  10%  { opacity: 0.9; }
-  80%  { opacity: 0.3; }
-  100% { transform: translateY(-100vh) translateX(var(--drift, 20px)) scale(0); opacity: 0; }
-}
-
-/* ── WRAPPER ────────────────────────────────── */
-.wrapper {
-  position: relative;
-  z-index: 1;
-  max-width: 1000px;
+.page {
+  max-width: 720px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 80px 24px 100px;
 }
 
-/* ── HERO ───────────────────────────────────── */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 80px 0 60px;
-  position: relative;
-}
-.hero-eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--fire);
-  margin-bottom: 20px;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.2s forwards;
-}
-.hero-hebrew {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(32px, 5vw, 52px);
-  font-style: italic;
-  color: var(--gold);
-  line-height: 1;
-  margin-bottom: 10px;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.4s forwards;
-}
-.hero-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(64px, 12vw, 120px);
-  font-weight: 900;
-  color: var(--cream);
-  line-height: 0.88;
-  margin-bottom: 30px;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.55s forwards;
-}
-.hero-sub {
-  font-size: clamp(15px, 2vw, 18px);
-  font-weight: 300;
-  color: var(--smoke);
-  max-width: 540px;
-  margin-bottom: 48px;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.7s forwards;
-}
-.hero-stats {
-  display: flex;
-  gap: 0;
-  border: 1px solid var(--border);
-  opacity: 0;
-  animation: fadeUp 0.8s 0.85s forwards;
-}
-.hero-stat {
-  padding: 20px 32px;
-  border-right: 1px solid var(--border);
-  transition: background 0.3s;
-}
-.hero-stat:last-child { border-right: none; }
-.hero-stat:hover { background: rgba(232,86,26,0.08); }
-.hs-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--gold);
-  line-height: 1;
-}
-.hs-label {
+/* ── HEADER ── */
+header { margin-bottom: 80px; }
+.eyebrow {
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 1.5px;
-  color: var(--ash);
-  text-transform: uppercase;
-  margin-top: 4px;
-}
-.scroll-hint {
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  color: var(--ash);
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  opacity: 0;
-  animation: fadeUp 1s 1.2s forwards;
-}
-.scroll-hint::after {
-  content: '';
-  display: block;
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--fire), transparent);
-  animation: pulse-line 2s ease-in-out infinite;
-}
-@keyframes pulse-line { 0%,100%{opacity:0.4} 50%{opacity:1} }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── SECTION LABEL ──────────────────────────── */
-.section-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--fire);
-  margin-bottom: 12px;
-}
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 700;
-  color: var(--cream);
-  margin-bottom: 8px;
-  line-height: 1.15;
-}
-.section-intro {
-  font-size: 15px;
-  color: var(--smoke);
-  max-width: 600px;
-  margin-bottom: 48px;
-}
-
-/* ── DIVIDER ────────────────────────────────── */
-.divider {
-  height: 1px;
-  background: linear-gradient(to right, var(--fire), transparent);
-  margin: 80px 0;
-  opacity: 0.35;
-}
-
-/* ── TIMELINE ───────────────────────────────── */
-.timeline-section { padding: 0 0 20px; }
-
-.tl-track-wrap {
-  position: relative;
-  margin-bottom: 40px;
-}
-.tl-track-bg {
-  height: 4px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 2px;
-  position: relative;
-  cursor: pointer;
-}
-.tl-track-fill {
-  height: 100%;
-  background: linear-gradient(to right, var(--ember), var(--fire), var(--gold));
-  border-radius: 2px;
-  width: 0%;
-  transition: width 0.05s;
-  pointer-events: none;
-}
-.tl-thumb {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
-  background: var(--gold);
-  border-radius: 50%;
-  border: 3px solid var(--dark);
-  box-shadow: 0 0 0 2px var(--gold);
-  cursor: grab;
-  transition: transform 0.1s, box-shadow 0.2s;
-  left: 0%;
-}
-.tl-thumb:active { cursor: grabbing; transform: translate(-50%,-50%) scale(1.3); }
-.tl-thumb:hover  { box-shadow: 0 0 0 4px rgba(245,166,35,0.3); }
-
-.tl-stops {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-.tl-stop-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--ash);
-  cursor: pointer;
-  transition: color 0.2s;
-  text-align: center;
-}
-.tl-stop-label:hover,
-.tl-stop-label.active { color: var(--gold); }
-
-.tl-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--fire);
-  padding: 36px 40px;
-  min-height: 200px;
-  transition: opacity 0.3s;
-  position: relative;
-}
-.tl-card-era {
-  font-size: 10px;
-  font-weight: 600;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--fire);
+  color: #E8561A;
+  margin-bottom: 16px;
+}
+.hebrew {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: #F5A623;
+  margin-bottom: 8px;
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(52px, 10vw, 88px);
+  font-weight: 700;
+  color: #FAF3E0;
+  line-height: 0.95;
+  margin-bottom: 24px;
+}
+.intro {
+  font-size: 16px;
+  color: #9A7A60;
+  max-width: 520px;
+  border-left: 2px solid #E8561A;
+  padding-left: 18px;
+}
+
+/* ── STATS ── */
+.stats {
+  display: flex;
+  border: 1px solid rgba(232,86,26,0.2);
+  margin-bottom: 80px;
+}
+.stat {
+  flex: 1;
+  padding: 20px 24px;
+  border-right: 1px solid rgba(232,86,26,0.2);
+}
+.stat:last-child { border-right: none; }
+.stat-n {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #F5A623;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-l {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #6A5040;
+  text-transform: uppercase;
+}
+
+/* ── SECTION ── */
+.section { margin-bottom: 72px; }
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #E8561A;
+  margin-bottom: 8px;
+}
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #FAF3E0;
+  margin-bottom: 20px;
+}
+p { font-size: 15px; color: #9A7A60; margin-bottom: 16px; }
+p:last-child { margin-bottom: 0; }
+
+/* ── TIMELINE ── */
+.tl-nav {
+  display: flex;
+  border: 1px solid rgba(232,86,26,0.2);
+  border-bottom: none;
+  overflow-x: auto;
+}
+.tl-btn {
+  flex: 1;
+  min-width: 60px;
+  background: none;
+  border: none;
+  border-right: 1px solid rgba(232,86,26,0.2);
+  padding: 14px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6A5040;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.2s, background 0.2s;
+  text-align: center;
+}
+.tl-btn:last-child { border-right: none; }
+.tl-btn:hover { color: #F5A623; background: rgba(232,86,26,0.05); }
+.tl-btn.active { color: #F5A623; background: rgba(232,86,26,0.08); }
+.tl-panel {
+  border: 1px solid rgba(232,86,26,0.2);
+  padding: 32px;
+}
+.tl-era {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #E8561A;
   margin-bottom: 10px;
 }
-.tl-card-title {
+.tl-title {
   font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--cream);
+  font-size: 22px;
+  color: #FAF3E0;
   margin-bottom: 14px;
 }
-.tl-card-body {
-  font-size: 15px;
-  color: var(--smoke);
-  line-height: 1.8;
-  max-width: 600px;
-}
-.tl-card-source {
-  margin-top: 18px;
-  font-size: 11px;
-  font-style: italic;
-  color: var(--ash);
-  border-top: 1px solid var(--border);
-  padding-top: 14px;
-}
-.tl-card-num {
-  position: absolute;
-  right: 40px;
-  top: 36px;
-  font-family: 'Playfair Display', serif;
-  font-size: 80px;
-  font-weight: 900;
-  color: rgba(232,86,26,0.06);
-  line-height: 1;
-}
+.tl-body { font-size: 14px; color: #9A7A60; line-height: 1.8; margin-bottom: 16px; }
+.tl-source { font-size: 11px; color: #5A4030; font-style: italic; }
 
-/* ── EXPANDABLE SECTIONS ────────────────────── */
-.expand-list { display: flex; flex-direction: column; gap: 2px; }
-
-.expand-item {
-  border: 1px solid var(--border);
-  background: var(--panel);
-  overflow: hidden;
-  transition: border-color 0.3s;
-}
-.expand-item.open { border-color: rgba(232,86,26,0.6); }
-
-.expand-trigger {
+/* ── ACCORDION ── */
+.accordion { border: 1px solid rgba(232,86,26,0.2); }
+.acc-item { border-bottom: 1px solid rgba(232,86,26,0.15); }
+.acc-item:last-child { border-bottom: none; }
+.acc-btn {
   width: 100%;
   background: none;
   border: none;
-  padding: 22px 28px;
+  padding: 18px 22px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 14px;
   cursor: pointer;
-  text-align: left;
-  gap: 16px;
-  transition: background 0.2s;
-}
-.expand-trigger:hover { background: rgba(232,86,26,0.06); }
-.expand-item.open .expand-trigger { background: rgba(232,86,26,0.08); }
-
-.expand-left {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.expand-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(232,86,26,0.15);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  flex-shrink: 0;
-  transition: background 0.3s;
-}
-.expand-item.open .expand-icon { background: rgba(232,86,26,0.3); }
-.expand-name {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--cream);
-}
-.expand-sub {
-  font-size: 12px;
-  color: var(--ash);
-  margin-top: 2px;
-}
-.expand-chevron {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: var(--ash);
-  transition: transform 0.35s, color 0.2s;
-}
-.expand-item.open .expand-chevron { transform: rotate(180deg); color: var(--gold); }
-
-.expand-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
-}
-.expand-inner {
-  padding: 0 28px 28px 28px;
-  border-top: 1px solid var(--border);
-  padding-top: 24px;
-}
-.expand-inner p {
-  font-size: 14.5px;
-  color: var(--smoke);
-  line-height: 1.8;
-  margin-bottom: 12px;
-}
-.expand-inner p:last-child { margin-bottom: 0; }
-.expand-tag {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--fire);
-  border: 1px solid var(--border);
-  padding: 3px 10px;
-  margin-bottom: 14px;
-}
-
-/* ── CARD GRID ──────────────────────────────── */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
-}
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--fire);
-  padding: 28px 26px;
-  transition: transform 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
-  cursor: default;
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(232,86,26,0.1), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.35s;
-}
-.card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(232,86,26,0.7);
-  background: #210E00;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(232,86,26,0.08);
-}
-.card:hover::before { opacity: 1; }
-
-.card-emoji {
-  font-size: 28px;
-  margin-bottom: 14px;
-  display: block;
-  filter: saturate(0.9);
-}
-.card-title {
+  font-family: 'Inter', sans-serif;
   font-size: 15px;
-  font-weight: 600;
-  color: var(--cream);
-  margin-bottom: 8px;
+  font-weight: 500;
+  color: #e8dcc8;
+  text-align: left;
+  transition: background 0.15s;
 }
-.card-body {
-  font-size: 13px;
-  color: var(--smoke);
-  line-height: 1.7;
-}
-
-/* ── COMMUNITY COMPARE ──────────────────────── */
-.community-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-.comm-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-}
-.comm-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
-  border-color: rgba(232,86,26,0.5);
-}
-.comm-header {
-  padding: 20px 22px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.comm-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--cream);
-  margin-bottom: 3px;
-}
-.comm-sub {
-  font-size: 11px;
-  color: var(--ash);
-  font-style: italic;
-}
-.comm-bar {
-  height: 3px;
-  margin-top: 14px;
-}
-.comm-body { padding: 16px 22px 22px; }
-.comm-item {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  align-items: flex-start;
-}
-.comm-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+.acc-btn:hover { background: rgba(232,86,26,0.05); }
+.acc-btn.open { color: #F5A623; }
+.acc-icon { font-size: 18px; flex-shrink: 0; }
+.acc-arrow {
+  margin-left: auto;
   flex-shrink: 0;
-  margin-top: 8px;
+  color: #6A5040;
+  transition: transform 0.3s;
 }
-.comm-text {
-  font-size: 13px;
-  color: var(--smoke);
-  line-height: 1.65;
-}
-
-/* ── TODAY STRIP ────────────────────────────── */
-.today-strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0;
-  border: 1px solid var(--border);
-  margin-bottom: 16px;
-}
-.today-col {
-  padding: 28px 28px;
-  border-right: 1px solid var(--border);
-}
-.today-col:last-child { border-right: none; }
-.today-col-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--gold);
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-}
-.today-item {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  align-items: flex-start;
-}
-.today-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--fire);
-  flex-shrink: 0;
-  margin-top: 9px;
-}
-.today-text {
-  font-size: 13px;
-  color: var(--smoke);
-  line-height: 1.6;
+.acc-btn.open .acc-arrow { transform: rotate(180deg); color: #E8561A; }
+.acc-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.acc-inner {
+  padding: 18px 22px 22px 54px;
+  font-size: 14px;
+  color: #9A7A60;
+  line-height: 1.8;
+  border-top: 1px solid rgba(232,86,26,0.1);
 }
 
-/* ── SOURCES ────────────────────────────────── */
-.sources-grid {
+/* ── GRID ── */
+.grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-.source-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--fire);
-  padding: 18px 20px;
-  transition: background 0.2s, border-color 0.2s;
+@media (max-width: 500px) { .grid { grid-template-columns: 1fr; } }
+.grid-card {
+  border: 1px solid rgba(232,86,26,0.2);
+  padding: 22px 20px;
+  transition: border-color 0.2s, background 0.2s;
 }
-.source-card:hover {
-  background: #210E00;
-  border-left-color: var(--gold);
+.grid-card:hover {
+  border-color: rgba(232,86,26,0.5);
+  background: rgba(232,86,26,0.04);
 }
-.source-type {
-  font-size: 9px;
-  font-weight: 600;
+.gc-label {
+  font-size: 10px;
+  font-weight: 500;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--fire);
-  margin-bottom: 5px;
+  color: #E8561A;
+  margin-bottom: 8px;
 }
-.source-ref {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--cream);
-  margin-bottom: 5px;
-}
-.source-desc {
-  font-size: 12px;
-  color: var(--smoke);
-  line-height: 1.65;
-}
-.source-url {
-  font-size: 11px;
-  color: var(--gold);
-  margin-top: 8px;
-  opacity: 0.7;
-  font-style: italic;
-}
+.gc-title { font-size: 14px; font-weight: 500; color: #FAF3E0; margin-bottom: 8px; }
+.gc-body { font-size: 13px; color: #7A5A40; line-height: 1.7; }
 
-/* ── FOOTER ─────────────────────────────────── */
-.site-footer {
-  border-top: 1px solid var(--border);
-  padding: 40px 0 20px;
+/* ── SOURCES ── */
+.source-list { display: flex; flex-direction: column; }
+.source-item {
+  display: flex;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  align-items: baseline;
+}
+.source-item:last-child { border-bottom: none; }
+.source-tag {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #E8561A;
+  flex-shrink: 0;
+  width: 70px;
+}
+.source-ref { font-size: 13px; color: #9A7A60; }
+.source-ref strong { color: #e8dcc8; font-weight: 500; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid rgba(232,86,26,0.2);
+  padding-top: 32px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-}
-.footer-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--cream);
-  margin-bottom: 6px;
-}
-.footer-sub { font-size: 12px; color: var(--ash); }
-.footer-right { text-align: right; }
-.footer-course {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--fire);
-  margin-bottom: 4px;
-}
-
-/* ── SCROLL REVEAL ──────────────────────────── */
-.reveal {
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.7s, transform 0.7s;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── RESPONSIVE ─────────────────────────────── */
-@media (max-width: 700px) {
-  .hero-stats { flex-wrap: wrap; }
-  .hero-stat { flex: 1 1 45%; }
-  .card-grid { grid-template-columns: 1fr; }
-  .community-grid { grid-template-columns: 1fr; }
-  .today-strip { grid-template-columns: 1fr; }
-  .today-col { border-right: none; border-bottom: 1px solid var(--border); }
-  .sources-grid { grid-template-columns: 1fr; }
-  .site-footer { flex-direction: column; gap: 20px; }
-  .footer-right { text-align: left; }
+  font-size: 12px;
+  color: #5A4030;
 }
 </style>
 </head>
 <body>
+<div class="page">
 
-<!-- Floating sparks -->
-<div id="particles"></div>
+  <header>
+    <div class="eyebrow">Jewish Holiday · JWST 201</div>
+    <div class="hebrew">לַג בָּעֹמֶר</div>
+    <h1>Lag BaOmer</h1>
+    <p class="intro">The 33rd day of the Omer — a celebration of fire, freedom, and spiritual light in the heart of a season of mourning.</p>
+  </header>
 
-<div class="wrapper">
+  <div class="stats">
+    <div class="stat"><div class="stat-n">33rd</div><div class="stat-l">Day of the Omer</div></div>
+    <div class="stat"><div class="stat-n">ל"ג</div><div class="stat-l">Hebrew = 33</div></div>
+    <div class="stat"><div class="stat-n">18 Iyar</div><div class="stat-l">Jewish calendar</div></div>
+    <div class="stat"><div class="stat-n">~2,000</div><div class="stat-l">Years observed</div></div>
+  </div>
 
-  <!-- ── HERO ──────────────────────────────────── -->
-  <section class="hero">
-    <div class="hero-eyebrow">Jewish Holiday · JWST 201</div>
-    <div class="hero-hebrew">לַג בָּעֹמֶר</div>
-    <div class="hero-title">Lag BaOmer</div>
-    <div class="hero-sub">The 33rd day of the Omer — a celebration of fire, freedom, and spiritual light in the heart of a season of mourning.</div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hs-num">33rd</div>
-        <div class="hs-label">Day of the Omer</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hs-num">ל"ג</div>
-        <div class="hs-label">Hebrew = 33</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hs-num">~2,000</div>
-        <div class="hs-label">Years observed</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hs-num">18 Iyar</div>
-        <div class="hs-label">Date on Jewish calendar</div>
-      </div>
-    </div>
-    <div class="scroll-hint">Scroll to explore</div>
-  </section>
+  <div class="section">
+    <div class="section-label">Origins</div>
+    <h2>How It Came to Be</h2>
+    <div class="tl-nav" id="tlNav"></div>
+    <div class="tl-panel" id="tlPanel"></div>
+  </div>
 
-  <!-- ── TIMELINE ───────────────────────────────── -->
-  <div class="divider"></div>
-  <section class="timeline-section reveal">
-    <div class="section-label">Origins &amp; History</div>
-    <div class="section-title">How Lag BaOmer Came to Be</div>
-    <div class="section-intro">Drag the timeline to explore the historical layers behind this holiday — from biblical commandment to Kabbalistic legend.</div>
+  <div class="section">
+    <div class="section-label">Observances</div>
+    <h2>How It's Celebrated</h2>
+    <div class="accordion" id="accordion"></div>
+  </div>
 
-    <div class="tl-track-wrap">
-      <div class="tl-track-bg" id="tlTrack">
-        <div class="tl-track-fill" id="tlFill"></div>
-        <div class="tl-thumb" id="tlThumb"></div>
-      </div>
-      <div class="tl-stops" id="tlStops"></div>
-    </div>
-
-    <div class="tl-card" id="tlCard">
-      <div class="tl-card-num" id="tlCardNum"></div>
-      <div class="tl-card-era" id="tlEra"></div>
-      <div class="tl-card-title" id="tlTitle"></div>
-      <div class="tl-card-body" id="tlBody"></div>
-      <div class="tl-card-source" id="tlSource"></div>
-    </div>
-  </section>
-
-  <!-- ── RITUALS ────────────────────────────────── -->
-  <div class="divider"></div>
-  <section class="reveal">
-    <div class="section-label">Rituals &amp; Observances</div>
-    <div class="section-title">How the Holiday is Celebrated</div>
-    <div class="section-intro">Click any ritual to learn more about its history and meaning.</div>
-
-    <div class="expand-list" id="ritualList"></div>
-  </section>
-
-  <!-- ── THEMES ─────────────────────────────────── -->
-  <div class="divider"></div>
-  <section class="reveal">
-    <div class="section-label">Religious Significance</div>
-    <div class="section-title">Key Themes</div>
-    <div class="section-intro">The spiritual dimensions that give Lag BaOmer its depth and meaning.</div>
-    <div class="card-grid" id="themesGrid"></div>
-  </section>
-
-  <!-- ── COMMUNITIES ───────────────────────────── -->
-  <div class="divider"></div>
-  <section class="reveal">
+  <div class="section">
     <div class="section-label">Cultural Context</div>
-    <div class="section-title">Across Jewish Communities</div>
-    <div class="section-intro">Lag BaOmer looks different depending on who is celebrating and where.</div>
-    <div class="community-grid" id="communityGrid"></div>
-  </section>
+    <h2>Across Jewish Communities</h2>
+    <div class="grid" id="commGrid"></div>
+  </div>
 
-  <!-- ── TODAY ──────────────────────────────────── -->
-  <div class="divider"></div>
-  <section class="reveal">
+  <div class="section">
     <div class="section-label">Contemporary Practice</div>
-    <div class="section-title">Lag BaOmer Today</div>
-    <div class="section-intro">How the holiday is observed now — and the debates surrounding it.</div>
-    <div class="today-strip">
-      <div class="today-col">
-        <div class="today-col-title">In Israel</div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Largest national bonfire night of the year</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">100,000+ pilgrims at Mount Meron</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Concerts, parades &amp; street festivals in every major city</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">2021 Meron crowd crush (45 killed) sparked new safety laws</div></div>
-      </div>
-      <div class="today-col">
-        <div class="today-col-title">In the Diaspora</div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Chabad-Lubavitch parades in NYC, LA, and worldwide</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Synagogue school outdoor bonfires &amp; barbecues</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Secular Jews participating culturally through food &amp; outdoor activities</div></div>
-      </div>
-      <div class="today-col">
-        <div class="today-col-title">Current Debates</div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Environmental concerns — cities banning or limiting bonfires</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Feminist reframings focused on spiritual light over Rashbi's male-centered legacy</div></div>
-        <div class="today-item"><div class="today-dot"></div><div class="today-text">Ongoing cultural vs. religious participation debate in secular Israeli society</div></div>
-      </div>
-    </div>
-  </section>
+    <h2>Lag BaOmer Today</h2>
+    <div class="grid" id="todayGrid"></div>
+  </div>
 
-  <!-- ── SOURCES ────────────────────────────────── -->
-  <div class="divider"></div>
-  <section class="reveal">
+  <div class="section">
     <div class="section-label">Works Cited</div>
-    <div class="section-title">Sources</div>
-    <div class="section-intro">All primary Jewish texts are available in English translation at Sefaria.org.</div>
-    <div class="sources-grid" id="sourcesGrid"></div>
-  </section>
+    <h2>Sources</h2>
+    <div class="source-list" id="sourceList"></div>
+  </div>
 
-  <!-- ── FOOTER ─────────────────────────────────── -->
-  <div class="divider"></div>
-  <footer class="site-footer">
-    <div>
-      <div class="footer-title">Lag BaOmer</div>
-      <div class="footer-sub">לַג בָּעֹמֶר · The 33rd Day of the Omer</div>
-    </div>
-    <div class="footer-right">
-      <div class="footer-course">JWST 201</div>
-      <div class="footer-sub">Jewish Holiday Group Presentation</div>
-    </div>
+  <footer>
+    <span>Lag BaOmer · JWST 201</span>
+    <span>Jewish Holiday Group Presentation</span>
   </footer>
 
-</div><!-- end wrapper -->
-
+</div>
 <script>
-/* ── DATA ────────────────────────────────────────── */
-const tlData = [
-  {
-    era: "Biblical Period · ~1300 BCE",
-    title: "The Omer Commandment",
-    body: "Leviticus 23:15–16 commands the Israelites to count 49 days from the day after Passover to the festival of Shavuot. This practice — Sefirat HaOmer (Counting of the Omer) — forms the calendrical foundation of Lag BaOmer. The 33rd day falls in the middle of this counting period.",
-    source: "Torah — Leviticus 23:15–16 · Available at Sefaria.org"
-  },
-  {
-    era: "Roman Period · ~2nd Century CE",
-    title: "The Plague of Rabbi Akiva's Students",
-    body: "The Babylonian Talmud (Yevamot 62b) records that 24,000 students of Rabbi Akiva died in a plague during the Omer period because they 'did not treat one another with respect.' The plague ceased on the 33rd day — Lag BaOmer — and the day became one of relief and celebration. This is the holiday's primary Talmudic origin.",
-    source: "Babylonian Talmud, Yevamot 62b · Available at Sefaria.org"
-  },
-  {
-    era: "Roman Period · 132–135 CE",
-    title: "The Bar Kokhba Revolt",
-    body: "Some scholars connect Lag BaOmer to a military victory during the Bar Kokhba revolt against Roman rule — a rebellion that Rabbi Akiva actively supported. On this view, Lag BaOmer marks a day when Jewish fighters achieved a significant victory, turning the mood from mourning to celebration. The archery custom may reference this martial history.",
-    source: "Jewish Virtual Library · My Jewish Learning"
-  },
-  {
-    era: "Kabbalistic Tradition · 2nd Century CE",
-    title: "Rabbi Shimon bar Yochai (Rashbi)",
-    body: "The Zohar — the central text of Jewish Kabbalah — records that Rabbi Shimon bar Yochai (Rashbi), the greatest student of Rabbi Akiva, passed away on Lag BaOmer. Rather than mourning, the day of his death is observed as a Hillula — a joyful anniversary — because Rashbi himself instructed his disciples to celebrate the day his soul ascended. This Kabbalistic layer gives the holiday its mystical character.",
-    source: "Zohar, Ha'azinu (Idra Zuta) · Available at Sefaria.org"
-  },
-  {
-    era: "Modern Era · 20th–21st Century",
-    title: "Lag BaOmer in the Modern World",
-    body: "Today, Lag BaOmer is observed by Jewish communities worldwide — from massive bonfires and pilgrimages to Meron in Israel, to Chabad parades in New York and Los Angeles. The 2021 crowd crush at Meron (45 killed) prompted new safety regulations and sparked broader conversations about balancing religious tradition with public safety. Environmental campaigns have also led cities to restrict bonfires.",
-    source: "My Jewish Learning · Jewish Virtual Library"
-  }
+const tl = [
+  { tab: "Torah",  era: "Biblical · ~1300 BCE",           title: "The Omer Commandment",        body: "Leviticus 23:15–16 commands counting 49 days from Passover to Shavuot — Sefirat HaOmer. The 33rd day falls in the middle of this period.", source: "Torah, Leviticus 23:15–16 · Sefaria.org" },
+  { tab: "Plague", era: "Roman Period · ~2nd Century CE",  title: "Rabbi Akiva's Students",       body: "The Talmud records that 24,000 students of Rabbi Akiva died during the Omer for failing to honor each other. The plague ceased on the 33rd day — Lag BaOmer.", source: "Babylonian Talmud, Yevamot 62b · Sefaria.org" },
+  { tab: "Revolt", era: "Roman Period · 132–135 CE",       title: "The Bar Kokhba Revolt",        body: "Some scholars connect Lag BaOmer to a military victory in the Bar Kokhba revolt against Rome. The archery custom may reference this martial history.", source: "Jewish Virtual Library" },
+  { tab: "Rashbi", era: "Kabbalistic Tradition · 2nd C.",  title: "Rabbi Shimon bar Yochai",      body: "The Zohar records that Rashbi — author of the Zohar — passed away on Lag BaOmer. His disciples were told to celebrate rather than mourn, making the day a joyful Hillula.", source: "Zohar, Ha'azinu (Idra Zuta) · Sefaria.org" },
+  { tab: "Today",  era: "Modern Era · 20th–21st Century",  title: "Lag BaOmer Now",               body: "Observed worldwide with bonfires, pilgrimages to Meron, and community celebrations. The 2021 Meron crowd crush (45 killed) sparked new safety regulations.", source: "My Jewish Learning · Jewish Virtual Library" }
 ];
 
-const ritualsData = [
-  {
-    icon: "🔥",
-    name: "Bonfires (Medurot)",
-    sub: "The central symbol of the holiday",
-    tag: "Universal Practice",
-    body: [
-      "On the night of Lag BaOmer, bonfires are lit across Israel and in Jewish communities worldwide. The bonfire (medura) is the defining visual symbol of the holiday — thousands of fires visible across the landscape create a dramatic, collective expression of joy.",
-      "The fire symbolizes the spiritual light of Torah and the luminous soul of Rabbi Shimon bar Yochai, whose teachings in the Zohar are described as illuminating darkness. In Israel, children begin collecting wood for weeks in advance, and neighborhoods compete to build the tallest bonfire."
-    ]
-  },
-  {
-    icon: "⛰️",
-    name: "Pilgrimage to Mount Meron",
-    sub: "One of the largest annual Jewish gatherings",
-    tag: "Sephardi & Mizrahi Emphasis",
-    body: [
-      "Each year, hundreds of thousands of Jews travel to Mount Meron in northern Israel — the burial site of Rabbi Shimon bar Yochai — to pray, sing, and dance around bonfires. The gathering is one of the largest annual events in the Jewish world.",
-      "The Hillula (Aramaic for 'celebration' or 'soul anniversary') at Meron is particularly central to Sephardi and Mizrahi observance. Pilgrims come from around the world, and the site is lit with enormous bonfires as Torah scrolls and books of Zohar are brought in procession."
-    ]
-  },
-  {
-    icon: "✂️",
-    name: "Upsherin — First Haircut",
-    sub: "A rite of passage at age 3",
-    tag: "Family Ritual",
-    body: [
-      "Many Jewish families give boys their first haircut (upsherin, from Yiddish meaning 'to cut off') when they turn 3, timed to coincide with Lag BaOmer. Until this point, the child's hair is left completely uncut.",
-      "The ceremony is considered a rite of passage marking the beginning of the child's formal Jewish education — after the haircut, the boy begins learning the Hebrew alphabet. Upsherin ceremonies are especially popular at Meron, where the hair is often cut at the bonfire near Rashbi's tomb."
-    ]
-  },
-  {
-    icon: "🏹",
-    name: "Archery & Outdoor Play",
-    sub: "A custom with disputed origins",
-    tag: "Children's Custom",
-    body: [
-      "Children traditionally go outside with bows and arrows on Lag BaOmer. The origin of this custom is debated. One explanation connects it to the soldiers of Bar Kokhba's revolt, who used bows in battle. Another holds that during Rashbi's lifetime, rainbows — traditionally a sign of divine displeasure with a sinful generation — never appeared, because Rashbi's merit protected his entire generation.",
-      "Either way, the outdoor nature of the custom fits the holiday's general spirit of going outside, escaping constraint, and celebrating freedom."
-    ]
-  },
-  {
-    icon: "🎵",
-    name: "Music, Dancing & Weddings",
-    sub: "The Omer restrictions lifted for one day",
-    tag: "Omer Exception",
-    body: [
-      "During the Omer period, Ashkenazi tradition observes restrictions on music, haircuts, and celebratory events like weddings — in mourning for Rabbi Akiva's students. On Lag BaOmer, all of these restrictions are lifted.",
-      "The resulting explosion of music and dancing gives the holiday an almost carnival atmosphere. Weddings are scheduled for Lag BaOmer specifically because of this exception, making it one of the busiest days of the year for Jewish wedding celebrations."
-    ]
-  },
-  {
-    icon: "📖",
-    name: "Study of Kabbalah (Zohar)",
-    sub: "The mystical dimension of the holiday",
-    tag: "Kabbalistic Practice",
-    body: [
-      "For communities with a strong Kabbalistic orientation — particularly Sephardi, Mizrahi, and Hasidic groups — Lag BaOmer is an occasion for intensive study of the Zohar, the central text of Jewish mysticism attributed to Rabbi Shimon bar Yochai.",
-      "The Idra Zuta section of the Zohar, which describes the final day of Rashbi's life, is traditionally read on Lag BaOmer. His death is framed not as tragedy but as a moment of supreme spiritual revelation — his soul ascending while pouring out the deepest secrets of Torah."
-    ]
-  }
+const rituals = [
+  { icon: "🔥", name: "Bonfires (Medurot)",         body: "On the night of Lag BaOmer, bonfires are lit across Israel and worldwide. The fire symbolizes the spiritual light of Torah and the soul of Rabbi Shimon bar Yochai. In Israel, children collect wood for weeks in advance." },
+  { icon: "⛰️", name: "Pilgrimage to Mount Meron",  body: "Hundreds of thousands travel to Mount Meron — the burial site of Rashbi — to pray and celebrate. One of the largest annual Jewish gatherings in the world, especially central to Sephardi and Mizrahi tradition." },
+  { icon: "✂️", name: "Upsherin — First Haircut",   body: "Many families give boys their first haircut at age 3 on Lag BaOmer, often at Meron. It marks the start of formal Jewish education and is treated as a major rite of passage." },
+  { icon: "🏹", name: "Archery & Outdoor Play",     body: "Children traditionally go outside with bows and arrows — possibly referencing Bar Kokhba's soldiers, or recalling that in Rashbi's time, rainbows (a sign of communal sin) never appeared because his merit protected the generation." },
+  { icon: "🎵", name: "Music, Dance & Weddings",    body: "Music and weddings are forbidden during the Omer's mourning period. On Lag BaOmer all restrictions lift — making it one of the busiest days for Jewish weddings and a day of intense celebration." },
+  { icon: "📖", name: "Study of the Zohar",         body: "For Sephardi, Mizrahi, and Hasidic communities, Lag BaOmer is an occasion for intensive Zohar study. The Idra Zuta — describing Rashbi's final day — is traditionally read as his soul's ascent is commemorated." }
 ];
 
-const themesData = [
-  { icon: "🔥", title: "Light & Fire", body: "Bonfires represent the spiritual fire of Torah and Rashbi's illuminating wisdom. The Zohar calls him 'Botzina Kaddisha' — the Sacred Lamp. His light is said to radiate even after death." },
-  { icon: "🕊️", title: "Freedom & Redemption", body: "The day marks liberation from mourning — commemorating the end of a devastating plague and possibly a military victory. Joy is itself an act of resistance against oppression." },
-  { icon: "📜", title: "Torah & Kabbalah", body: "Lag BaOmer is the most important date in the Kabbalistic calendar. The Zohar's secrets, revealed by Rashbi on his deathbed, make this a day of deep esoteric significance." },
-  { icon: "❤️", title: "Love & Unity", body: "Because Akiva's students died for failing to honor each other (Yevamot 62b), Lag BaOmer is a call for mutual respect. Torah knowledge without human dignity is incomplete." }
+const comms = [
+  { label: "Ashkenazi",      sub: "Eastern European",             body: "Neighborhood bonfires, Chabad parades, outdoor games. Moderate emphasis on Meron pilgrimage." },
+  { label: "Sephardi",       sub: "Mediterranean & Middle Eastern", body: "Strong Meron pilgrimage tradition. Upsherin at Rashbi's tomb. Special liturgical poems in his honor." },
+  { label: "Mizrahi",        sub: "North African, Yemenite, Persian", body: "Deeply Kabbalistic. Moroccan Hillula with Zoharic hymns, special foods, and rich folk traditions." },
+  { label: "Secular Israel", sub: "Cultural participation",       body: "Many secular Israelis participate through bonfires and gatherings without the religious framing." }
 ];
 
-const commData = [
-  {
-    name: "Ashkenazi",
-    sub: "Eastern European tradition",
-    color: "#E8561A",
-    items: ["Neighborhood bonfires and outdoor gatherings", "Chabad-organized community parades", "Outdoor games, songs, and marshmallow roasting", "Moderate emphasis on the Meron pilgrimage"]
-  },
-  {
-    name: "Sephardi",
-    sub: "Mediterranean & Middle Eastern",
-    color: "#C0622A",
-    items: ["Strong pilgrimage tradition to Meron", "Upsherin ceremonies at Rashbi's tomb", "Special piyyutim (liturgical poems) for Rashbi", "Large communal bonfires as gathering centers"]
-  },
-  {
-    name: "Mizrahi",
-    sub: "North African, Yemenite, Persian",
-    color: "#F5A623",
-    items: ["Deeply Kabbalistic — focused on Rashbi", "Moroccan Hillula celebrated with great intensity", "Special foods and Zoharic hymns", "Rich folk traditions passed through generations"]
-  }
+const today = [
+  { label: "In Israel",        body: "Largest national bonfire night of the year. 100,000+ pilgrims at Meron. Concerts and street festivals across major cities." },
+  { label: "In the Diaspora",  body: "Chabad parades in NYC, LA, and worldwide. Synagogue bonfires and barbecues. Secular participation through food and outdoor activities." },
+  { label: "Current Debates",  body: "Environmental concerns over bonfires. Feminist reframings of the holiday. Safety reforms following the 2021 Meron tragedy." },
+  { label: "2021 Meron",       body: "A crowd crush killed 45 people — the deadliest civilian disaster in Israeli history. New crowd-control laws now regulate the annual gathering." }
 ];
 
-const sourcesData = [
-  { type: "Torah — Primary", ref: "Leviticus 23:15–16", desc: "Commands the 49-day Sefirat HaOmer between Passover and Shavuot.", url: "sefaria.org/Leviticus.23.15" },
-  { type: "Talmud — Primary", ref: "Babylonian Talmud, Yevamot 62b", desc: "The plague of Rabbi Akiva's 24,000 students and its cessation on Lag BaOmer.", url: "sefaria.org/Yevamot.62b" },
-  { type: "Kabbalah — Primary", ref: "Zohar, Ha'azinu (Idra Zuta)", desc: "Rabbi Shimon bar Yochai's death and Hillula, central to the Kabbalistic meaning of the holiday.", url: "sefaria.org/Zohar" },
-  { type: "Secondary", ref: "My Jewish Learning", desc: '"Lag BaOmer 101" — comprehensive overview of customs, history, and modern observance.', url: "myjewishlearning.com/article/lag-baomer/" },
-  { type: "Secondary", ref: "Jewish Virtual Library", desc: '"Lag B\'Omer" — historical and cultural analysis including Bar Kokhba connection.', url: "jewishvirtuallibrary.org" },
-  { type: "Repository", ref: "Sefaria.org", desc: "Free open-access digital library of Jewish texts in Hebrew with English translation.", url: "sefaria.org" }
+const sources = [
+  { tag: "Torah",      ref: "Leviticus 23:15–16",                      url: "sefaria.org" },
+  { tag: "Talmud",     ref: "Babylonian Talmud, Yevamot 62b",           url: "sefaria.org" },
+  { tag: "Kabbalah",   ref: "Zohar, Ha'azinu (Idra Zuta)",              url: "sefaria.org" },
+  { tag: "Secondary",  ref: "My Jewish Learning — \"Lag BaOmer 101\"",  url: "myjewishlearning.com" },
+  { tag: "Secondary",  ref: "Jewish Virtual Library — \"Lag B'Omer\"",  url: "jewishvirtuallibrary.org" },
+  { tag: "Repository", ref: "Sefaria.org — primary text repository",    url: "sefaria.org" }
 ];
 
-/* ── PARTICLES ───────────────────────────────────── */
-const pc = document.getElementById('particles');
-for (let i = 0; i < 28; i++) {
-  const s = document.createElement('div');
-  s.className = 'spark';
-  s.style.cssText = `
-    left:${Math.random()*100}%;
-    --dur:${3+Math.random()*5}s;
-    --delay:${Math.random()*6}s;
-    --drift:${(Math.random()-0.5)*60}px;
-    width:${2+Math.random()*3}px;
-    height:${2+Math.random()*3}px;
-    background:${Math.random()>0.5?'#F5A623':'#E8561A'};
-  `;
-  pc.appendChild(s);
+// Timeline
+let active = 0;
+const tlNav = document.getElementById('tlNav');
+const tlPanel = document.getElementById('tlPanel');
+function renderTl(i) {
+  active = i;
+  tlNav.querySelectorAll('.tl-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+  const d = tl[i];
+  tlPanel.innerHTML = `<div class="tl-era">${d.era}</div><div class="tl-title">${d.title}</div><div class="tl-body">${d.body}</div><div class="tl-source">${d.source}</div>`;
 }
-
-/* ── TIMELINE ────────────────────────────────────── */
-let tlIndex = 0;
-const track  = document.getElementById('tlTrack');
-const fill   = document.getElementById('tlFill');
-const thumb  = document.getElementById('tlThumb');
-const stops  = document.getElementById('tlStops');
-
-// Build stop labels
-tlData.forEach((d,i) => {
-  const lbl = document.createElement('div');
-  lbl.className = 'tl-stop-label' + (i===0?' active':'');
-  lbl.textContent = (i+1).toString().padStart(2,'0');
-  lbl.title = d.title;
-  lbl.onclick = () => goTo(i);
-  stops.appendChild(lbl);
+tl.forEach((d,i) => {
+  const b = document.createElement('button');
+  b.className = 'tl-btn' + (i===0?' active':'');
+  b.textContent = d.tab;
+  b.onclick = () => renderTl(i);
+  tlNav.appendChild(b);
 });
+renderTl(0);
 
-function goTo(i) {
-  tlIndex = i;
-  const pct = tlData.length < 2 ? 0 : (i / (tlData.length-1)) * 100;
-  fill.style.width  = pct + '%';
-  thumb.style.left  = pct + '%';
-  document.querySelectorAll('.tl-stop-label').forEach((l,j)=>l.classList.toggle('active',j===i));
-  const d = tlData[i];
-  document.getElementById('tlEra').textContent    = d.era;
-  document.getElementById('tlTitle').textContent  = d.title;
-  document.getElementById('tlBody').textContent   = d.body;
-  document.getElementById('tlSource').textContent = d.source;
-  document.getElementById('tlCardNum').textContent = String(i+1).padStart(2,'0');
-  const card = document.getElementById('tlCard');
-  card.style.opacity = '0';
-  requestAnimationFrame(()=>{ card.style.transition='opacity 0.3s'; card.style.opacity='1'; });
-}
-goTo(0);
-
-// Drag logic
-let dragging = false;
-function pctFromEvent(e) {
-  const r = track.getBoundingClientRect();
-  const cx = (e.touches ? e.touches[0].clientX : e.clientX);
-  return Math.min(1, Math.max(0, (cx - r.left) / r.width));
-}
-function updateFromPct(p) {
-  const idx = Math.round(p * (tlData.length-1));
-  if (idx !== tlIndex) goTo(idx);
-  fill.style.width = (p*100)+'%';
-  thumb.style.left = (p*100)+'%';
-}
-thumb.addEventListener('mousedown',  e => { dragging=true; e.preventDefault(); });
-thumb.addEventListener('touchstart', e => { dragging=true; }, {passive:true});
-document.addEventListener('mousemove',  e => { if(dragging) updateFromPct(pctFromEvent(e)); });
-document.addEventListener('touchmove',  e => { if(dragging) updateFromPct(pctFromEvent(e)); }, {passive:true});
-document.addEventListener('mouseup',  () => dragging=false);
-document.addEventListener('touchend', () => dragging=false);
-track.addEventListener('click', e => { if(!dragging) updateFromPct(pctFromEvent(e)); });
-
-/* ── RITUALS (EXPAND) ────────────────────────────── */
-const rl = document.getElementById('ritualList');
-ritualsData.forEach(r => {
+// Accordion
+const acc = document.getElementById('accordion');
+rituals.forEach(r => {
   const item = document.createElement('div');
-  item.className = 'expand-item';
+  item.className = 'acc-item';
   item.innerHTML = `
-    <button class="expand-trigger" aria-expanded="false">
-      <div class="expand-left">
-        <div class="expand-icon">${r.icon}</div>
-        <div>
-          <div class="expand-name">${r.name}</div>
-          <div class="expand-sub">${r.sub}</div>
-        </div>
-      </div>
-      <svg class="expand-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    <button class="acc-btn">
+      <span class="acc-icon">${r.icon}</span>
+      <span>${r.name}</span>
+      <svg class="acc-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
-    <div class="expand-body">
-      <div class="expand-inner">
-        <span class="expand-tag">${r.tag}</span>
-        ${r.body.map(p=>`<p>${p}</p>`).join('')}
-      </div>
-    </div>`;
-  const btn  = item.querySelector('.expand-trigger');
-  const body = item.querySelector('.expand-body');
-  const inner = item.querySelector('.expand-inner');
-  btn.addEventListener('click', () => {
-    const open = item.classList.toggle('open');
-    btn.setAttribute('aria-expanded', open);
+    <div class="acc-body"><div class="acc-inner">${r.body}</div></div>`;
+  const btn = item.querySelector('.acc-btn');
+  const body = item.querySelector('.acc-body');
+  const inner = item.querySelector('.acc-inner');
+  btn.onclick = () => {
+    const open = btn.classList.toggle('open');
     body.style.maxHeight = open ? inner.scrollHeight + 'px' : '0';
+  };
+  acc.appendChild(item);
+});
+
+// Grids
+function makeGrid(id, data, hasTitle) {
+  const g = document.getElementById(id);
+  data.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'grid-card';
+    el.innerHTML = `<div class="gc-label">${c.label}</div>${hasTitle ? `<div class="gc-title">${c.sub}</div>` : ''}<div class="gc-body">${c.body}</div>`;
+    g.appendChild(el);
   });
-  rl.appendChild(item);
-});
+}
+makeGrid('commGrid', comms, true);
+makeGrid('todayGrid', today, false);
 
-/* ── THEMES (CARDS) ──────────────────────────────── */
-const tg = document.getElementById('themesGrid');
-themesData.forEach(t => {
-  const c = document.createElement('div');
-  c.className = 'card';
-  c.innerHTML = `<span class="card-emoji">${t.icon}</span><div class="card-title">${t.title}</div><div class="card-body">${t.body}</div>`;
-  tg.appendChild(c);
+// Sources
+const sl = document.getElementById('sourceList');
+sources.forEach(s => {
+  const el = document.createElement('div');
+  el.className = 'source-item';
+  el.innerHTML = `<span class="source-tag">${s.tag}</span><span class="source-ref"><strong>${s.ref}</strong> · ${s.url}</span>`;
+  sl.appendChild(el);
 });
-
-/* ── COMMUNITIES ─────────────────────────────────── */
-const cg = document.getElementById('communityGrid');
-commData.forEach(c => {
-  const card = document.createElement('div');
-  card.className = 'comm-card';
-  card.innerHTML = `
-    <div class="comm-header">
-      <div class="comm-name">${c.name}</div>
-      <div class="comm-sub">${c.sub}</div>
-      <div class="comm-bar" style="background:${c.color}"></div>
-    </div>
-    <div class="comm-body">
-      ${c.items.map(i=>`<div class="comm-item"><div class="comm-dot" style="background:${c.color}"></div><div class="comm-text">${i}</div></div>`).join('')}
-    </div>`;
-  cg.appendChild(card);
-});
-
-/* ── SOURCES ─────────────────────────────────────── */
-const sg = document.getElementById('sourcesGrid');
-sourcesData.forEach(s => {
-  const c = document.createElement('div');
-  c.className = 'source-card';
-  c.innerHTML = `<div class="source-type">${s.type}</div><div class="source-ref">${s.ref}</div><div class="source-desc">${s.desc}</div><div class="source-url">${s.url}</div>`;
-  sg.appendChild(c);
-});
-
-/* ── SCROLL REVEAL ───────────────────────────────── */
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
